@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17130e">
+<meta name="referrer" content="no-referrer">
+<title>工位木鱼 · 敲一下，掉一点班味</title>
+<meta name="description" content="办公室静音木鱼。敲一下，掉一点班味。不用注册，不用登录，不用说话。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="工位木鱼 · 敲一下，掉一点班味">
+<meta property="og:description" content="不用注册，不用登录，不用说话。点一下就行。">
+<meta property="og:image" content="og.png">
+<style>
+  :root{
+    --bg0:#14110c; --bg1:#1f1a12; --ink:#efe6d6; --dim:#a99b84;
+    --gold:#d8a566; --wood0:#d79a5c; --wood1:#a4662c; --wood2:#6f3f17;
+    --card:#221c14;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--bg0); color:var(--ink);
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,sans-serif;
+    overflow:hidden; overscroll-behavior:none; user-select:none;
+    -webkit-user-select:none;
+  }
+  .scene{
+    position:fixed; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:space-between;
+    padding:calc(env(safe-area-inset-top) + 14px) 14px calc(env(safe-area-inset-bottom) + 10px);
+    background:
+      radial-gradient(120% 80% at 50% 30%, #2a2216 0%, var(--bg1) 38%, var(--bg0) 78%);
+  }
+  .grain{
+    position:absolute; inset:0; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .glow{
+    position:absolute; left:50%; top:38%; width:82vmin; height:82vmin; transform:translate(-50%,-50%);
+    background:radial-gradient(circle, rgba(216,165,102,.16) 0%, rgba(216,165,102,.05) 42%, transparent 68%);
+    pointer-events:none; animation:breathe 7s ease-in-out infinite;
+  }
+  @keyframes breathe{0%,100%{opacity:.75;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}}
+
+  .dust{position:absolute; inset:0; pointer-events:none; overflow:hidden}
+  .dust i{
+    position:absolute; width:2px; height:2px; border-radius:50%;
+    background:rgba(240,220,180,.5); animation:float linear infinite;
+  }
+  @keyframes float{
+    0%{transform:translate3d(0,10vh,0); opacity:0}
+    12%{opacity:.7}
+    88%{opacity:.5}
+    100%{transform:translate3d(14px,-88vh,0); opacity:0}
+  }
+
+  header{position:relative; z-index:2; text-align:center; width:100%; max-width:560px}
+  .brand{
+    font-family:"Songti SC","Source Han Serif SC",Georgia,serif;
+    font-size:26px; letter-spacing:.34em; margin-left:.34em; color:var(--ink);
+  }
+  .tagline{margin-top:8px; font-size:13px; letter-spacing:.14em; color:var(--dim)}
+  .tagline em{font-style:normal; color:var(--gold)}
+
+  .stage{position:relative; z-index:2; flex:1 1 auto; width:100%; max-width:560px; min-height:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0}
+
+  .strike{position:relative; width:min(82vw,360px); aspect-ratio:1/1; display:grid; place-items:center;
+    cursor:pointer; touch-action:manipulation; outline:none}
+  .strike svg{width:100%; height:100%; display:block; overflow:visible}
+
+  .muyu{transform-origin:52% 62%; transform-box:view-box}
+  .strike.is-hit .muyu{animation:squash .17s cubic-bezier(.25,1.6,.4,1)}
+  @keyframes squash{
+    0%{transform:scale(1,1)}
+    28%{transform:scale(1.035,.945)}
+    62%{transform:scale(.99,1.015)}
+    100%{transform:scale(1,1)}
+  }
+  .mallet{transform-origin:226px 16px; transform-box:view-box}
+  .strike.is-hit .mallet{animation:swing .19s cubic-bezier(.3,.9,.4,1)}
+  @keyframes swing{
+    0%{transform:rotate(0)}
+    34%{transform:rotate(17deg)}
+    100%{transform:rotate(0)}
+  }
+  .strike:active .muyu{filter:brightness(1.06)}
+
+  .ring{position:absolute; left:50%; top:56%; width:34%; aspect-ratio:1/1; border-radius:50%;
+    border:1px solid rgba(233,196,142,.65); transform:translate(-50%,-50%) scale(.5);
+    opacity:0; pointer-events:none}
+  .ring.go{animation:ring .62s ease-out forwards}
+  @keyframes ring{
+    0%{opacity:.85; transform:translate(-50%,-50%) scale(.45)}
+    100%{opacity:0; transform:translate(-50%,-50%) scale(1.9)}
+  }
+  .plus{position:absolute; left:50%; top:46%; font-size:15px; letter-spacing:.1em;
+    color:#f0d5a8; text-shadow:0 0 12px rgba(216,165,102,.55); pointer-events:none;
+    animation:rise .9s cubic-bezier(.2,.8,.3,1) forwards}
+  @keyframes rise{
+    0%{opacity:0; transform:translate(-50%,8px) scale(.9)}
+    18%{opacity:1}
+    100%{opacity:0; transform:translate(-50%,-64px) scale(1.02)}
+  }
+
+  .score{display:flex; align-items:baseline; gap:9px; margin-top:0; height:40px}
+  .score-label{font-size:11px; letter-spacing:.18em; color:var(--dim); padding-bottom:5px}
+  .score-num{font-family:"Songti SC",Georgia,serif; font-size:36px; line-height:1;
+    color:var(--gold); font-variant-numeric:tabular-nums; letter-spacing:.02em}
+  .score-num.bump{animation:bump .22s ease-out}
+  @keyframes bump{0%{transform:scale(1)}38%{transform:scale(1.16)}100%{transform:scale(1)}}
+
+  .hint{margin-top:6px; font-size:12px; color:#8d816d; letter-spacing:.16em; transition:opacity .5s; height:16px}
+  .hint.gone{opacity:0}
+  .visitors{margin-top:10px; font-size:11px; color:#7a6f5e; letter-spacing:.12em; height:14px}
+
+  footer{position:relative; z-index:2; width:100%; max-width:560px; display:flex; flex-direction:column;
+    align-items:center; gap:10px}
+  .acts{display:flex; gap:8px; width:100%; max-width:430px}
+  button{font:inherit; color:var(--ink); background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.11); border-radius:999px;
+    padding:10px 10px; font-size:12.5px; letter-spacing:.06em; cursor:pointer; flex:1 1 0; white-space:nowrap;
+    transition:transform .12s, background .2s, border-color .2s}
+  button:hover{background:rgba(255,255,255,.09)}
+  button:active{transform:scale(.96)}
+  #tip{border-color:rgba(216,165,102,.42); color:#f0d5a8; background:rgba(216,165,102,.1)}
+  #tip:hover{background:rgba(216,165,102,.17)}
+  .disclaimer{margin:0; font-size:9.8px; line-height:1.5; color:#6b6152;
+    text-align:center; letter-spacing:.02em; max-width:430px}
+
+  .modal{position:fixed; inset:0; z-index:9; display:flex; align-items:center; justify-content:center;
+    padding:24px; background:rgba(8,6,4,.72); backdrop-filter:blur(7px);
+    opacity:0; pointer-events:none; transition:opacity .22s}
+  .modal.open{opacity:1; pointer-events:auto}
+  .card{background:var(--card); border:1px solid rgba(255,255,255,.1); border-radius:22px;
+    padding:24px 22px 20px; width:100%; max-width:330px; text-align:center;
+    box-shadow:0 28px 70px rgba(0,0,0,.6); transform:translateY(10px) scale(.98);
+    transition:transform .26s cubic-bezier(.2,.9,.3,1.2)}
+  .modal.open .card{transform:none}
+  .card h2{margin:0 0 6px; font-family:"Songti SC",Georgia,serif; font-size:19px; letter-spacing:.16em; font-weight:500}
+  .card p{margin:0 0 14px; font-size:12.5px; line-height:1.75; color:var(--dim); letter-spacing:.03em}
+  .qrbox{width:186px; height:186px; margin:0 auto 12px; border-radius:14px; overflow:hidden;
+    background:#fff; display:grid; place-items:center; position:relative}
+  .qrbox img{width:100%; height:100%; object-fit:contain; display:block}
+  .qrbox .miss{color:#8b8375; font-size:11.5px; line-height:1.6; padding:0 16px; letter-spacing:.04em}
+  .fine{font-size:10.5px !important; color:#6b6152 !important; margin-bottom:16px !important}
+  .card button{width:100%}
+
+  /* 桌面：改成纵向居中构图，别把内容摊在四角 */
+  @media (min-width:820px){
+    .scene{justify-content:center; gap:26px}
+    .stage{flex:0 0 auto}
+    .strike{width:min(32vw,400px)}
+    .brand{font-size:31px}
+    .tagline{font-size:14px; margin-top:10px}
+    .score{height:52px}
+    .score-num{font-size:46px}
+    .score-label{font-size:12px}
+    .hint{font-size:13px; margin-top:8px}
+    .visitors{font-size:12px; margin-top:12px}
+    .acts{max-width:520px}
+    button{padding:11px 14px; font-size:13.5px}
+    .disclaimer{font-size:10.5px}
+  }
+
+  @media (max-width:380px){
+    .brand{font-size:23px}
+    .score-num{font-size:33px}
+    .strike{width:74vw}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .glow,.dust i{animation:none}
+  }
+</style>
+</head>
+<body>
+<div class="scene">
+  <div class="grain"></div>
+  <div class="glow"></div>
+  <div class="dust" id="dust"></div>
+
+  <header>
+    <div class="brand">工位木鱼</div>
+    <div class="tagline" id="tagline">敲一下，<em>掉</em>一点班味</div>
+  </header>
+
+  <main class="stage">
+    <div class="strike" id="strike" role="button" tabindex="0" aria-label="敲木鱼">
+      <div class="ring" id="ring"></div>
+      <svg viewBox="0 0 260 240" aria-hidden="true">
+        <defs>
+          <linearGradient id="w" x1="20%" y1="4%" x2="74%" y2="100%">
+            <stop offset="0%" stop-color="#dfa367"/>
+            <stop offset="38%" stop-color="#b1742f"/>
+            <stop offset="100%" stop-color="#55290a"/>
+          </linearGradient>
+          <linearGradient id="w2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f6d9ae"/><stop offset="100%" stop-color="#c08540"/>
+          </linearGradient>
+          <radialGradient id="gloss" cx="30%" cy="18%" r="68%">
+            <stop offset="0%" stop-color="#fff3dc" stop-opacity=".5"/>
+            <stop offset="100%" stop-color="#fff3dc" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="7"/>
+          </filter>
+
+          <path id="body" d="M124 50C178 50 212 80 212 122C212 158 184 190 124 190C64 190 36 158 36 122C36 80 70 50 124 50Z"/>
+          <ellipse id="mouth" cx="218" cy="120" rx="32" ry="25" transform="rotate(-12 218 120)"/>
+          <mask id="cut">
+            <rect x="0" y="0" width="260" height="240" fill="#fff"/>
+            <use href="#mouth" fill="#000"/>
+          </mask>
+          <clipPath id="bclip"><use href="#body"/></clipPath>
+        </defs>
+
+        <ellipse cx="124" cy="204" rx="70" ry="11" fill="#000" opacity=".55" filter="url(#soft)"/>
+
+        <path d="M80 98C58 94 45 78 53 62C61 47 80 49 83 61C85 70 76 74 70 69"
+              fill="none" stroke="url(#w2)" stroke-width="11" stroke-linecap="round"/>
+
+        <g class="muyu">
+          <g mask="url(#cut)">
+            <use href="#body" fill="url(#w)"/>
+            <use href="#body" fill="url(#gloss)"/>
+            <path d="M58 142C82 158 106 164 134 164" fill="none" stroke="#4a2408" stroke-opacity=".32" stroke-width="2.6" stroke-linecap="round"/>
+            <path d="M50 114C76 128 102 134 130 134" fill="none" stroke="#4a2408" stroke-opacity=".2" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M80 86C102 74 128 68 154 68" fill="none" stroke="#ffe1b4" stroke-opacity=".2" stroke-width="3" stroke-linecap="round"/>
+            <ellipse cx="96" cy="94" rx="34" ry="18" transform="rotate(-18 96 94)" fill="url(#gloss)" opacity=".5"/>
+            <path d="M62 168C84 182 106 187 130 187" fill="none" stroke="#2a1405" stroke-opacity=".28" stroke-width="5" stroke-linecap="round"/>
+          </g>
+          <g clip-path="url(#bclip)">
+            <use href="#mouth" fill="none" stroke="#2f1704" stroke-width="6" opacity=".9"/>
+            <use href="#mouth" fill="none" stroke="#7d4a1b" stroke-width="1.6" opacity=".45"/>
+          </g>
+        </g>
+
+        <g class="mallet">
+          <path d="M254 -10 214 40" stroke="url(#w2)" stroke-width="11.5" stroke-linecap="round"/>
+          <path d="M254 -10 214 40" stroke="#6b3d13" stroke-opacity=".22" stroke-width="3.2" stroke-linecap="round"/>
+          <circle cx="208" cy="46" r="18" fill="url(#w)"/>
+          <circle cx="208" cy="46" r="18" fill="url(#gloss)" opacity=".5"/>
+          <circle cx="202" cy="39" r="5" fill="#ffeac8" opacity=".42"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="score">
+      <span class="score-label">摸鱼值</span>
+      <span class="score-num" id="score">0</span>
+    </div>
+    <div class="hint" id="hint">点一下木鱼（空格也行）</div>
+    <div class="visitors" id="visitors"></div>
+  </main>
+
+  <footer>
+    <div class="acts">
+      <button id="sound" type="button">🔊 有声</button>
+      <button id="share" type="button">分享</button>
+      <button id="tip" type="button">上点油 · 1元</button>
+    </div>
+    <p class="disclaimer">不是宗教服务：不祈福、不供奉、不收功德。就是一个敲着解压的网页。</p>
+  </footer>
+</div>
+
+<!-- 可靠的页面访问计数（1px 图，不采集任何信息；abacus 抖动时靠它兜底） -->
+<img src="https://hits.sh/gongwei-muyu.app/pv.svg" width="1" height="1" alt=""
+     style="position:absolute;left:-9999px;opacity:0;pointer-events:none">
+
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="mt">
+    <h2 id="mt">给木鱼上点油</h2>
+    <p>1 元。域名和服务器都是我自己掏的。<br>不打赏也能一直敲，没有任何功能被锁。</p>
+    <div class="qrbox" id="qrbox">
+      <img id="qr" src="zan.png" alt="1元打赏收款码">
+    </div>
+    <p class="fine">自愿打赏，不是购买商品或服务；不退款、不发货。</p>
+    <button id="close" type="button">知道了</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- 文案池 ---------- */
+  var TAGLINES = [
+    "敲一下，<em>掉</em>一点班味",
+    "老板看不见的第 <em>108</em> 下",
+    "工位上唯一<em>不静音</em>的东西",
+    "敲完这 3 分钟，<em>活还得干</em>"
+  ];
+
+  /* ---------- 元素 ---------- */
+  var strike   = document.getElementById("strike");
+  var scoreEl  = document.getElementById("score");
+  var hintEl   = document.getElementById("hint");
+  var visitors = document.getElementById("visitors");
+  var ring     = document.getElementById("ring");
+  var tagline  = document.getElementById("tagline");
+  var soundBtn = document.getElementById("sound");
+  var shareBtn = document.getElementById("share");
+  var tipBtn   = document.getElementById("tip");
+  var modal    = document.getElementById("modal");
+  var closeBtn = document.getElementById("close");
+  var qrImg    = document.getElementById("qr");
+  var qrBox    = document.getElementById("qrbox");
+
+  /* ---------- 状态 ---------- */
+  var SKEY = "gongwei_muyu_v1";
+  function loadState(){
+    try{ return JSON.parse(localStorage.getItem(SKEY)||"{}"); }catch(e){ return {}; }
+  }
+  function saveState(s){
+    try{ localStorage.setItem(SKEY, JSON.stringify(s)); }catch(e){}
+  }
+  var st = loadState();
+  st.total = st.total||0;
+  st.sound = st.sound !== false;
+  st.tip = st.tip||0;
+  var today = new Date().toISOString().slice(0,10);
+  if(st.day !== today){ st.day = today; st.today = 0; }
+  st.today = st.today||0;
+
+  scoreEl.textContent = String(st.total);
+
+  /* ---------- 随机花名（现在只用在分享文案里） ---------- */
+  var A = ["安静的","不加班","第七层的","打烊后的","开会时的","深夜的","摸鱼的","下雨天的"];
+  var B = ["雨滴","硬座","茶叶梗","竹影","三号工位","旧茶杯","空调风","纸飞机","打印机","水杯盖"];
+  function dharmaName(){
+    return A[Math.floor(Math.random()*A.length)] + B[Math.floor(Math.random()*B.length)];
+  }
+
+  /* ---------- 木鱼声（WebAudio 合成，不加载任何音频文件） ---------- */
+  var actx = null, muted = !st.sound;
+  function audioInit(){
+    if(actx) { if(actx.state === "suspended") actx.resume(); return; }
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return;
+    try{ actx = new AC(); }catch(e){ actx = null; }
+  }
+  function tok(ctxIn){
+    var c = ctxIn || actx;
+    if(!c || muted) return;
+    var t = c.currentTime, out = c.createGain();
+    out.gain.value = 1; out.connect(c.destination);
+
+    /* 1) 木面敲击瞬态 */
+    var len = Math.floor(c.sampleRate*0.035);
+    var buf = c.createBuffer(1, len, c.sampleRate);
+    var d = buf.getChannelData(0);
+    for(var i=0;i<len;i++){ d[i] = (Math.random()*2-1) * Math.pow(1-i/len, 3.2); }
+    var src = c.createBufferSource(); src.buffer = buf;
+    var bp = c.createBiquadFilter(); bp.type = "bandpass";
+    bp.frequency.value = 1750 * (1 + (Math.random()*0.12-0.06)); bp.Q.value = 4.5;
+    var g1 = c.createGain();
+    g1.gain.setValueAtTime(0.5, t);
+    g1.gain.exponentialRampToValueAtTime(0.001, t+0.055);
+    src.connect(bp); bp.connect(g1); g1.connect(out); src.start(t); src.stop(t+0.06);
+
+    /* 2) 木腔共鸣（三个衰减不同的正弦，产生"空腔"感） */
+    var parts = [[520,0.05,0.20],[196,0.13,0.30],[905,0.022,0.085]];
+    for(var k=0;k<parts.length;k++){
+      var f = parts[k][0]*(1+(Math.random()*0.05-0.025));
+      var osc = c.createOscillator(); osc.type = "sine";
+      osc.frequency.setValueAtTime(f, t);
+      var g = c.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(parts[k][2], t+0.004);
+      g.gain.exponentialRampToValueAtTime(0.0006, t+parts[k][1]);
+      osc.connect(g); g.connect(out); osc.start(t); osc.stop(t+parts[k][1]+0.02);
+    }
+  }
+  window.__tok = tok;   /* 离线音频自检用 */
+
+  function setSoundBtn(){
+    soundBtn.textContent = muted ? "🔇 静音" : "🔊 有声";
+  }
+  setSoundBtn();
+
+  /* ---------- 敲 ---------- */
+  var lastHit = 0, hintGone = false;
+  function hit(x, y){
+    var now = Date.now();
+    if(now - lastHit < 55) return;
+    lastHit = now;
+
+    st.total++; st.today++; saveState(st);
+    scoreEl.textContent = String(st.total);
+    scoreEl.classList.remove("bump");
+    void scoreEl.offsetWidth;
+    scoreEl.classList.add("bump");
+
+    strike.classList.remove("is-hit");
+    void strike.offsetWidth;
+    strike.classList.add("is-hit");
+    setTimeout(function(){ strike.classList.remove("is-hit"); }, 200);
+
+    ring.classList.remove("go");
+    void ring.offsetWidth;
+    ring.classList.add("go");
+
+    var p = document.createElement("span");
+    p.className = "plus";
+    var dx = 22 + (Math.random()*40-20);
+    p.style.left = "calc(50% + " + dx + "px)";
+    p.textContent = "+1";
+    strike.appendChild(p);
+    setTimeout(function(){ p.remove(); }, 950);
+
+    tok();
+    if(navigator.vibrate) navigator.vibrate(9);
+
+    if(!hintGone){ hintGone = true; hintEl.classList.add("gone"); }
+    if(st.total === 1){ markTapOnce(); }
+  }
+
+  strike.addEventListener("pointerdown", function(e){
+    e.preventDefault(); audioInit(); hit(e.clientX, e.clientY);
+  }, {passive:false});
+  strike.addEventListener("keydown", function(e){
+    if(e.key === " " || e.key === "Enter"){ e.preventDefault(); audioInit(); hit(); }
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key === " " && document.activeElement !== strike){ e.preventDefault(); audioInit(); hit(); }
+  });
+
+  /* ---------- 灰尘粒子 ---------- */
+  (function dust(){
+    var box = document.getElementById("dust"), n = 16;
+    for(var i=0;i<n;i++){
+      var s = document.createElement("i");
+      s.style.left = (Math.random()*100) + "%";
+      s.style.bottom = (-10 - Math.random()*20) + "vh";
+      var d = 16 + Math.random()*16;
+      s.style.animationDuration = d + "s";
+      s.style.animationDelay = (-Math.random()*d) + "s";
+      s.style.opacity = 0.25 + Math.random()*0.5;
+      box.appendChild(s);
+    }
+  })();
+
+  /* ---------- 标语轮换 ---------- */
+  (function rotate(){
+    var i = 0;
+    setInterval(function(){
+      i = (i+1) % TAGLINES.length;
+      tagline.style.opacity = 0;
+      setTimeout(function(){ tagline.innerHTML = TAGLINES[i]; tagline.style.opacity = 1; }, 260);
+    }, 9000);
+  })();
+  tagline.style.transition = "opacity .26s";
+
+  /* ---------- 极简计数：无 cookie、不采集身份 ----------
+     用途只有三个：进来多少人、多少人真的点了、付款笔数（付款靠后台账单）
+     abacus 免费计数 API，失败就静默降级，不影响玩 */
+  var NS = "gongwei-muyu-live";
+  /* 免费计数服务会间歇抖动，失败重试一次，再失败就静默隐藏（不影响玩） */
+  function api(path, tries){
+    tries = tries || 2;
+    return fetch("https://abacus.jasoncameron.dev/" + path, {mode:"cors", cache:"no-store"})
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        if(j && typeof j.value === "number") return j.value;
+        throw new Error("bad");
+      })
+      .catch(function(){
+        if(tries > 1){
+          return new Promise(function(res){ setTimeout(res, 1300); }).then(function(){ return api(path, tries-1); });
+        }
+        return null;
+      });
+  }
+  function hitCounter(key){ return api("hit/" + NS + "/" + key); }
+  function getCounter(key){ return api("get/" + NS + "/" + key); }
+
+  var DAY = today.replace(/-/g,"");
+  var channel = "";
+  try{
+    var m = new URLSearchParams(location.search).get("c");
+    if(m) channel = String(m).replace(/[^a-z0-9]/gi,"").slice(0,10);
+  }catch(e){}
+
+  /* 每人每天只记一次进来（localStorage 去重），避免刷新刷数 */
+  if(st.uvDay !== DAY){
+    st.uvDay = DAY; saveState(st);
+    hitCounter("uv-" + DAY).then(function(v){
+      if(v !== null){
+        visitors.textContent = "今天第 " + v + " 位推门进来";
+        saveState(st);
+      }
+      if(channel) hitCounter("c-" + channel + "-" + DAY);
+    });
+  }else{
+    getCounter("uv-" + DAY).then(function(v){
+      if(v !== null) visitors.textContent = "今天第 " + v + " 位推门进来";
+    });
+  }
+
+  function markTapOnce(){
+    if(st.tapDay === DAY) return;
+    st.tapDay = DAY; saveState(st);
+    hitCounter("tap-" + DAY);
+  }
+
+  /* ---------- 分享 ---------- */
+  shareBtn.addEventListener("click", function(){
+    var url = location.origin === "null" ? location.href : location.href.split("?")[0];
+    var text = "我在「工位木鱼」敲到 " + st.total + " 点摸鱼值了（今天叫" + dharmaName() + "）";
+    if(navigator.share){
+      navigator.share({title:"工位木鱼", text:text, url:url}).catch(function(){});
+      return;
+    }
+    var full = text + "\n" + url;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(full).then(function(){
+        shareBtn.textContent = "已复制";
+        setTimeout(function(){ shareBtn.textContent = "分享"; }, 1400);
+      }).catch(function(){ prompt("复制这段：", full); });
+    }else{
+      prompt("复制这段：", full);
+    }
+  });
+
+  /* ---------- 静音 ---------- */
+  soundBtn.addEventListener("click", function(){
+    muted = !muted; st.sound = !muted; saveState(st); setSoundBtn();
+    if(!muted){ audioInit(); tok(); }
+  });
+
+  /* ---------- 打赏弹层 ---------- */
+  function openTip(){
+    audioInit(); tok();
+    modal.classList.add("open"); modal.setAttribute("aria-hidden","false");
+    st.tip = (st.tip||0) + 1; saveState(st);
+  }
+  function closeTip(){
+    modal.classList.remove("open"); modal.setAttribute("aria-hidden","true");
+  }
+  tipBtn.addEventListener("click", openTip);
+  closeBtn.addEventListener("click", closeTip);
+  modal.addEventListener("click", function(e){ if(e.target === modal) closeTip(); });
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape") closeTip(); });
+
+  qrImg.addEventListener("error", function(){
+    qrBox.innerHTML = '<div class="miss">收款码还没放上来。<br>（占位：把 zan.png 放进同目录即可）</div>';
+  });
+
+  /* ---------- 自检开关：#autotest 连敲 5 下（不写进对外文案） ---------- */
+  if(location.hash === "#autotest"){
+    setTimeout(function(){ for(var i=0;i<5;i++) hit(); }, 120);
+  }
+
+  /* 方便我远程读数：window.__muyu 暴露当前状态 */
+  window.__muyu = function(){ return {total:st.total, today:st.today, day:st.day, muted:muted}; };
+})();
+</script>
+</body>
+</html>

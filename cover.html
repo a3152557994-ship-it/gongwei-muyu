@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>封面</title>
+<style>
+  html,body{margin:0;padding:0}
+  .wrap{width:1080px;height:1350px;position:relative;overflow:hidden;
+    background:radial-gradient(115% 78% at 50% 28%, #2b2317 0%, #1b160f 40%, #14110c 78%);
+    font-family:"PingFang SC","Hiragino Sans GB",sans-serif;color:#efe6d6}
+  .grain{position:absolute;inset:0;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .glow{position:absolute;left:50%;top:41%;width:900px;height:900px;transform:translate(-50%,-50%);
+    background:radial-gradient(circle, rgba(216,165,102,.18) 0%, rgba(216,165,102,.05) 44%, transparent 68%)}
+  .tag{position:absolute;left:80px;top:74px;font-size:26px;letter-spacing:.22em;color:#a99b84}
+  .tag b{color:#d8a566;font-weight:500}
+  h1{position:absolute;left:80px;top:150px;margin:0;font-family:"Songti SC","Source Han Serif SC",serif;
+    font-size:96px;line-height:1.22;letter-spacing:.06em;font-weight:500}
+  h1 em{font-style:normal;color:#d8a566}
+  .sub{position:absolute;left:84px;top:410px;font-size:31px;letter-spacing:.16em;color:#a99b84}
+  .art{position:absolute;left:50%;top:770px;width:560px;transform:translate(-50%,-50%)}
+  .art svg{width:100%;height:auto;display:block;overflow:visible}
+  .meter{position:absolute;left:0;right:0;bottom:126px;text-align:center;
+    font-size:30px;letter-spacing:.3em;color:#8d816d}
+  .meter span{color:#d8a566;font-family:"Songti SC",Georgia,serif;font-size:44px;letter-spacing:.06em}
+  .foot{position:absolute;left:0;right:0;bottom:66px;text-align:center;font-size:23px;color:#6b6152;letter-spacing:.18em}
+</style></head><body>
+<div class="wrap">
+  <div class="glow"></div><div class="grain"></div>
+  <div class="tag">打工人自救工具 · <b>001</b></div>
+  <h1>敲一下，<br><em>掉</em>一点班味</h1>
+  <div class="sub">不用注册 · 不用登录 · 不用说话</div>
+  <div class="art"><svg viewBox="0 0 260 240" aria-hidden="true">
+        <defs>
+          <linearGradient id="w" x1="20%" y1="4%" x2="74%" y2="100%">
+            <stop offset="0%" stop-color="#dfa367"/>
+            <stop offset="38%" stop-color="#b1742f"/>
+            <stop offset="100%" stop-color="#55290a"/>
+          </linearGradient>
+          <linearGradient id="w2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f6d9ae"/><stop offset="100%" stop-color="#c08540"/>
+          </linearGradient>
+          <radialGradient id="gloss" cx="30%" cy="18%" r="68%">
+            <stop offset="0%" stop-color="#fff3dc" stop-opacity=".5"/>
+            <stop offset="100%" stop-color="#fff3dc" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="7"/>
+          </filter>
+
+          <path id="body" d="M124 50C178 50 212 80 212 122C212 158 184 190 124 190C64 190 36 158 36 122C36 80 70 50 124 50Z"/>
+          <ellipse id="mouth" cx="218" cy="120" rx="32" ry="25" transform="rotate(-12 218 120)"/>
+          <mask id="cut">
+            <rect x="0" y="0" width="260" height="240" fill="#fff"/>
+            <use href="#mouth" fill="#000"/>
+          </mask>
+          <clipPath id="bclip"><use href="#body"/></clipPath>
+        </defs>
+
+        <ellipse cx="124" cy="204" rx="70" ry="11" fill="#000" opacity=".55" filter="url(#soft)"/>
+
+        <path d="M80 98C58 94 45 78 53 62C61 47 80 49 83 61C85 70 76 74 70 69"
+              fill="none" stroke="url(#w2)" stroke-width="11" stroke-linecap="round"/>
+
+        <g class="muyu">
+          <g mask="url(#cut)">
+            <use href="#body" fill="url(#w)"/>
+            <use href="#body" fill="url(#gloss)"/>
+            <path d="M58 142C82 158 106 164 134 164" fill="none" stroke="#4a2408" stroke-opacity=".32" stroke-width="2.6" stroke-linecap="round"/>
+            <path d="M50 114C76 128 102 134 130 134" fill="none" stroke="#4a2408" stroke-opacity=".2" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M80 86C102 74 128 68 154 68" fill="none" stroke="#ffe1b4" stroke-opacity=".2" stroke-width="3" stroke-linecap="round"/>
+            <ellipse cx="96" cy="94" rx="34" ry="18" transform="rotate(-18 96 94)" fill="url(#gloss)" opacity=".5"/>
+            <path d="M62 168C84 182 106 187 130 187" fill="none" stroke="#2a1405" stroke-opacity=".28" stroke-width="5" stroke-linecap="round"/>
+          </g>
+          <g clip-path="url(#bclip)">
+            <use href="#mouth" fill="none" stroke="#2f1704" stroke-width="6" opacity=".9"/>
+            <use href="#mouth" fill="none" stroke="#7d4a1b" stroke-width="1.6" opacity=".45"/>
+          </g>
+        </g>
+
+        <g class="mallet">
+          <path d="M254 -10 214 40" stroke="url(#w2)" stroke-width="11.5" stroke-linecap="round"/>
+          <path d="M254 -10 214 40" stroke="#6b3d13" stroke-opacity=".22" stroke-width="3.2" stroke-linecap="round"/>
+          <circle cx="208" cy="46" r="18" fill="url(#w)"/>
+          <circle cx="208" cy="46" r="18" fill="url(#gloss)" opacity=".5"/>
+          <circle cx="202" cy="39" r="5" fill="#ffeac8" opacity=".42"/>
+        </g>
+      </svg></div>
+  <div class="meter">摸鱼值 <span>1</span></div>
+  <div class="foot">工位静音木鱼</div>
+</div>
+</body></html>
